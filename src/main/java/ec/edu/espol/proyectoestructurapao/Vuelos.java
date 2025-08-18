@@ -1,12 +1,13 @@
 package ec.edu.espol.proyectoestructurapao;
 
+//Aristas
 public class Vuelos {
     private Aeropuerto source; // vertice origen
     private Aeropuerto target; // vertice destino
     private int minuto; // minuto de vuelo
     private int distancia; // distancia de la arista
     private double precio; // contenido de la arista
-    private String aerolinea; // aerolinea del vuelo
+    private String aerolinea; // nombre aerolinea del vuelo
 
     // Constructor
     public Vuelos(Aeropuerto source, Aeropuerto target, int minuto, int distancia, double precio, String aerolinea){

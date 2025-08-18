@@ -2,19 +2,22 @@ package ec.edu.espol.proyectoestructurapao;
 
 import java.util.LinkedList;
 
+//nodos
 public class Aeropuerto{
     private String codigo; // codigo del aeropuerto
     private String nombre; // nombre del aeropuerto
     private String ciudad; // ciudad del aeropuerto
-    private String pais; // pais del aeropuerto  
-    private LinkedList<Vuelos> adjacentes; // lista de vuelos adyacentes
+    private String pais; // pais del aeropuerto
+    private String coordenadas; // Coordenadas del aeropuerto
+    private LinkedList<Vuelos> adyacentes; // lista de vuelos que salen del aeropuerto
 
-    public Aeropuerto(String codigo, String nombre, String ciudad, String pais) {
+    public Aeropuerto(String codigo, String nombre, String ciudad, String pais, String coordenadas) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.ciudad = ciudad;
         this.pais = pais;
-        this.adjacentes = new LinkedList<>();
+        this.coordenadas = coordenadas;
+        this.adyacentes = new LinkedList<>();
     }
 
     // Getters y Setters
@@ -50,12 +53,25 @@ public class Aeropuerto{
         this.pais = pais;
     }
 
-    public LinkedList<Vuelos> getAdjacentes() {
-        return adjacentes;
+    public LinkedList<Vuelos> getAdyacentes() {
+        return adyacentes;
     }
 
-    public void setAdjacentes(LinkedList<Vuelos> adjacentes) {
-        this.adjacentes = adjacentes;
+    public void setAdyacentes(LinkedList<Vuelos> adyacentes) {
+        this.adyacentes = adyacentes;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Aeropuerto other = (Aeropuerto) obj;
+        return codigo != null && codigo.equals(other.codigo);
+    }
+
+    @Override
+    public int hashCode() {
+        return codigo != null ? codigo.hashCode() : 0;
     }
 
 }
