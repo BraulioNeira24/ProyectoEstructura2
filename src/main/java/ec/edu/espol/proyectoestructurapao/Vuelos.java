@@ -1,47 +1,53 @@
 package ec.edu.espol.proyectoestructurapao;
 
-public class Vuelos<E,V> {
-    private Aeropuerto<V, E> source; // vertice origen
-    private Aeropuerto<V,E> target; // vertice destino
+public class Vuelos {
+    private Aeropuerto source; // vertice origen
+    private Aeropuerto target; // vertice destino
     private int minuto; // minuto de vuelo
     private int distancia; // distancia de la arista
     private double precio; // contenido de la arista
+    private String aerolinea; // aerolinea del vuelo
 
     // Constructor
-    public Vuelos(Aeropuerto<V,E> source, Aeropuerto<V,E> target, int minuto, int distancia, double precio){
+    public Vuelos(Aeropuerto source, Aeropuerto target, int minuto, int distancia, double precio, String aerolinea){
         this.source = source;
         this.target = target;
         this.minuto = minuto;
         this.distancia = distancia;
         this.precio = precio;
+        this.aerolinea = aerolinea;
     }
 
-    public Vuelos(Aeropuerto<V,E> source, Aeropuerto<V,E> target, int minuto, int distancia){
-        this(source, target, minuto, distancia, 0);
+    public Vuelos(Aeropuerto source, Aeropuerto target, int minuto, int distancia, double precio){
+        this(source, target, minuto, distancia, precio, null);
     }
 
-    public Vuelos(Aeropuerto<V,E> source, Aeropuerto<V,E> target, int minuto){
-        this(source, target, minuto, -1, 0);
+    public Vuelos(Aeropuerto source, Aeropuerto target, int minuto, int distancia){
+        this(source, target, minuto, distancia, 0, null);
     }
 
-    public Vuelos(Aeropuerto<V,E> source, Aeropuerto<V,E> target){
-        this(source, target, 0, -1, 0);
+    public Vuelos(Aeropuerto source, Aeropuerto target, int minuto){
+        this(source, target, minuto, -1, 0, null);
+    }
+
+    public Vuelos(Aeropuerto source, Aeropuerto target){
+        this(source, target, 0, -1, 0, null);
     }
 
     // Getters y Setters
-    public Aeropuerto<V, E> getSource() {
+    public Aeropuerto getSource() {
         return source;
     }
 
-    public void setSource(Aeropuerto<V, E> source) {
+    public void setSource(Aeropuerto source) {
         this.source = source;
     }
 
-    public Aeropuerto<V, E> getTarget() {
+    public Aeropuerto getTarget() {
         return target;
     }
 
-    public void setTarget(Aeropuerto<V, E> target) {
+    public void setTarget(Aeropuerto target) {
         this.target = target;
     }
 
@@ -69,4 +75,11 @@ public class Vuelos<E,V> {
         this.precio = precio;
     }
 
+    public String getAerolinea() {
+        return aerolinea;
+    }
+
+    public void setAerolinea(String aerolinea) {
+        this.aerolinea = aerolinea;
+    }
 }

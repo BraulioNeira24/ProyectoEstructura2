@@ -1,0 +1,71 @@
+ * ¡Por supuesto! Aquí tienes una guía paso a paso para tu proyecto, con lo que debes saber, usar y las funciones clave que puedes reutilizar. Te lo organizo en secciones para que puedas avanzar ordenadamente.
+
+1. Conceptos y estructuras que debes dominar
+Grafos dirigidos y ponderados: Nodos = aeropuertos, aristas = vuelos, pesos = distancia/tiempo/costo.
+Listas de adyacencia: Para representar el grafo.
+Árboles de búsqueda (opcional): Para organizar vuelos/aerolíneas por prioridad o alfabéticamente.
+Persistencia de datos: Guardar y cargar datos en archivos (texto o binario).
+JavaFX: Para la interfaz gráfica.
+Algoritmos de grafos: Dijkstra (rutas más cortas), BFS/DFS (búsquedas).
+2. Estructura básica del sistema
+Clases principales:
+Aeropuerto: nombre, código, ubicación, etc.
+Vuelo: origen, destino, distancia, tiempo, costo, aerolínea.
+GrafoVuelos: lista de aeropuertos (nodos), lista de vuelos (aristas), métodos para agregar/eliminar/buscar.
+(Opcional) ArbolBusqueda: para organizar vuelos/aerolíneas.
+Persistencia:
+Métodos para guardar/cargar aeropuertos y vuelos en archivos.
+Interfaz gráfica:
+Panel para visualizar el grafo.
+Formularios para agregar/editar/eliminar aeropuertos y vuelos.
+Panel de estadísticas.
+3. Funcionalidades mínimas (obligatorias)
+Carga inicial de datos (archivo o interfaz gráfica).
+Visualización del grafo (panel gráfico con nodos y aristas).
+Consulta de rutas óptimas (Dijkstra, BFS, DFS).
+Estadísticas básicas:
+Número de conexiones por aeropuerto.
+Aeropuerto más/menos conectado.
+Ruta más corta entre dos destinos.
+Interfaz JavaFX:
+Añadir/eliminar aeropuertos.
+Añadir/editar/eliminar vuelos.
+Buscar rutas entre destinos.
+4. Funcionalidades electivas (opcional, para nota extra)
+Visualización con coordenadas geográficas.
+Integración con base de datos.
+Simulación de itinerarios/horarios.
+Exportar rutas a PDF/Excel.
+Mostrar rutas alternativas.
+5. Pasos sugeridos para el desarrollo
+Diseña las clases (Aeropuerto, Vuelo, GrafoVuelos).
+Implementa el grafo con listas de adyacencia.
+Agrega métodos CRUD (crear, leer, actualizar, eliminar) para aeropuertos y vuelos.
+Implementa la persistencia (guardar/cargar datos).
+Implementa los algoritmos de rutas (Dijkstra, BFS, DFS).
+Crea la interfaz gráfica con JavaFX:
+Visualización del grafo.
+Formularios para gestión de datos.
+Panel de estadísticas.
+Conecta la lógica con la interfaz.
+Prueba todas las funcionalidades.
+Agrega funcionalidades electivas si tienes tiempo.
+6. Funciones clave reutilizables
+agregarAeropuerto(Aeropuerto a)
+eliminarAeropuerto(String codigo)
+agregarVuelo(Vuelo v)
+eliminarVuelo(String origen, String destino)
+buscarRutaMasCorta(String origen, String destino) // Dijkstra
+buscarRutaBFS(String origen, String destino)
+buscarRutaDFS(String origen, String destino)
+guardarDatos(String archivo)
+cargarDatos(String archivo)
+calcularEstadisticas()
+7. Consejos
+Mantén el código limpio y bien documentado.
+Usa nombres descriptivos para variables y métodos.
+Haz pruebas frecuentes.
+Usa diagramas para planificar la estructura del grafo y la interfaz.
+No olvides la persistencia de datos (¡es obligatoria!).
+¿Quieres que te ayude a diseñar alguna clase, algoritmo o parte específica? ¿O prefieres que te ayude a organizar el código base inicial?
+ */
