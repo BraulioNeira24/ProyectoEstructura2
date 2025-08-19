@@ -36,9 +36,14 @@ public class ProyectoEstructuraPAO {
         RedVuelos.addVuelo("GYE", "UIO", 40, 60.54,"Avianca");
         RedVuelos.addVuelo("UIO", "LHR", 634, 412.23,"Avianca");
         RedVuelos.addVuelo("UIO", "NRT", 1440, 615.23,"Avianca");
+        RedVuelos.addVuelo("LHR", "PKX" , 542, 438,"Avianca");
 
         for (Vuelos v: aerQuito.getAdyacentes()){
             System.out.println(v.getDistancia());
+        }
+
+        for(String s: RedVuelos.dijkstra("GYE","PKX")){
+            System.out.println(s);
         }
 
 

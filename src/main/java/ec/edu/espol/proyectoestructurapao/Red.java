@@ -150,7 +150,21 @@ public class Red {
     }
 
     //Aeropuerto con más conexiones
-
+    public Aeropuerto aeropuertoMasConectado() {
+        Aeropuerto masConectado = null;
+        int maxConexiones = 0;
+        // Recorrer todos los aeropuertos
+        for (Aeropuerto aeropuerto : vertices) {
+            // Obtener el número de conexiones salientes del aeropuerto
+            int conexiones = aeropuerto.getAdyacentes().size();
+            // Comprobar si el número de conexiones es mayor que el mayor actual
+                if (maxConexiones < conexiones) {
+                    maxConexiones = conexiones;
+                    masConectado = aeropuerto;
+                }
+            }
+            return masConectado;
+        }
 
 
     
@@ -166,14 +180,14 @@ public class Red {
     //Aeropuerto con menor conexion
     public Aeropuerto aeropuertoMenosConectado() {
         Aeropuerto menosConectado = null;
-        int minConexiones = Integer.MAX_VALUE;
+        int maxConexiones = Integer.MAX_VALUE;
         // Recorrer todos los aeropuertos
         for (Aeropuerto aeropuerto : vertices) {
             // Obtener el número de conexiones salientes del aeropuerto
             int conexiones = aeropuerto.getAdyacentes().size();
             // Comprobar si el número de conexiones es menor que el mínimo actual
-            if (conexiones < minConexiones) {
-                minConexiones = conexiones;
+            if (conexiones < maxConexiones) {
+                maxConexiones = conexiones;
                 menosConectado = aeropuerto;
             }
         }
@@ -194,7 +208,6 @@ public class Red {
         buscarRutasDFS(aeropuertoOrigen, aeropuertoDestino, rutaActual, rutas, visitados);
         return rutas;
     }
-    
     // Metodo Auxiliar
     private void buscarRutasDFS(Aeropuerto actual, Aeropuerto destino, List<Vuelos> rutaActual, List<List<Vuelos>> rutas, List<Aeropuerto> visitados){
         // Si el actual es igual al destino
