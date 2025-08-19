@@ -5,34 +5,18 @@ public class Vuelos {
     private Aeropuerto source; // vertice origen
     private Aeropuerto target; // vertice destino
     private int minuto; // minuto de vuelo
-    private int distancia; // distancia de la arista
+    private Double distancia; // distancia de la arista
     private double precio; // contenido de la arista
     private String aerolinea; // nombre aerolinea del vuelo
 
     // Constructor
-    public Vuelos(Aeropuerto source, Aeropuerto target, int minuto, int distancia, double precio, String aerolinea){
+    public Vuelos(Aeropuerto source, Aeropuerto target, int minuto, double precio, String aerolinea){
         this.source = source;
         this.target = target;
         this.minuto = minuto;
-        this.distancia = distancia;
+        this.distancia = distancia(source,target);
         this.precio = precio;
         this.aerolinea = aerolinea;
-    }
-
-    public Vuelos(Aeropuerto source, Aeropuerto target, int minuto, int distancia, double precio){
-        this(source, target, minuto, distancia, precio, null);
-    }
-
-    public Vuelos(Aeropuerto source, Aeropuerto target, int minuto, int distancia){
-        this(source, target, minuto, distancia, 0, null);
-    }
-
-    public Vuelos(Aeropuerto source, Aeropuerto target, int minuto){
-        this(source, target, minuto, -1, 0, null);
-    }
-
-    public Vuelos(Aeropuerto source, Aeropuerto target){
-        this(source, target, 0, -1, 0, null);
     }
 
     // Getters y Setters
@@ -60,11 +44,11 @@ public class Vuelos {
         this.minuto = minuto;
     }
 
-    public int getDistancia() {
+    public Double getDistancia() {
         return distancia;
     }
 
-    public void setDistancia(int distancia) {
+    public void setDistancia(Double distancia) {
         this.distancia = distancia;
     }
 
@@ -83,4 +67,21 @@ public class Vuelos {
     public void setAerolinea(String aerolinea) {
         this.aerolinea = aerolinea;
     }
+
+    public static double distancia(Aeropuerto source, Aeropuerto target){
+        final int R = 6371; //Radio de la tierra
+
+        double latRad1 = Math.toRadians(source.getLatitud());
+        double latRad2 = Math.toRadians(target.getLatitud());
+        double deltaLat = Math.toRadians(target.getLatitud() - source.getLatitud());
+        double deltaLon = Math.toRadians(target.getLongitud() - source.getLongitud());
+
+        double a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+               Math.cos(latRad1) * Math.cos(latRad2) *
+               Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return Math.round(R * c);
+    }
+
 }

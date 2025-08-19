@@ -8,15 +8,17 @@ public class Aeropuerto{
     private String nombre; // nombre del aeropuerto
     private String ciudad; // ciudad del aeropuerto
     private String pais; // pais del aeropuerto
-    private String coordenadas; // Coordenadas del aeropuerto
+    private Double latitud; // Coordenadas del aeropuerto
+    private Double longitud;
     private LinkedList<Vuelos> adyacentes; // lista de vuelos que salen del aeropuerto
 
-    public Aeropuerto(String codigo, String nombre, String ciudad, String pais, String coordenadas) {
+    public Aeropuerto(String codigo, String nombre, String ciudad, String pais, Double latitud, Double longitud) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.ciudad = ciudad;
         this.pais = pais;
-        this.coordenadas = coordenadas;
+        this.latitud = latitud;
+        this.longitud = longitud;
         this.adyacentes = new LinkedList<>();
     }
 
@@ -60,6 +62,22 @@ public class Aeropuerto{
     public void setAdyacentes(LinkedList<Vuelos> adyacentes) {
         this.adyacentes = adyacentes;
     }
+    
+    public Double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public Double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -68,6 +86,8 @@ public class Aeropuerto{
         Aeropuerto other = (Aeropuerto) obj;
         return codigo != null && codigo.equals(other.codigo);
     }
+
+
 
     @Override
     public int hashCode() {

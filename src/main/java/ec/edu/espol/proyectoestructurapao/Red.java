@@ -15,12 +15,10 @@ import java.util.Queue;
 //Aristas dirigidas?
 public class Red {
     private LinkedList<Aeropuerto> vertices = new LinkedList<>();
-    private boolean isDirected;
     private Comparator cmp;
 
 
-    public Red(boolean isDirected, Comparator cmp) {
-        this.isDirected = isDirected;
+    public Red(Comparator cmp) {
         this.cmp = cmp;
     }
 
@@ -36,7 +34,7 @@ public class Red {
     }
 
     
-    private Aeropuerto findAeropuerto(String Codigo) {
+    public Aeropuerto findAeropuerto(String Codigo) {
         for (Aeropuerto v : vertices){
             String c = v.getCodigo();
             
@@ -70,9 +68,9 @@ public class Red {
 
     }
     
-
+    
     // Conectar Aeropuertos "Crear Vuelo"
-    public boolean addVuelo(String codigo1, String codigo2, int minuto, int distancia, double precio){
+    public boolean addVuelo(String codigo1, String codigo2, int minuto, double precio, String aerolinea){
         if (codigo1==null || codigo2==null){
             return false;
         }
@@ -84,7 +82,7 @@ public class Red {
             return false;
         }
 
-        Vuelos newEdge = new Vuelos(v1, v2, minuto, distancia, precio);
+        Vuelos newEdge = new Vuelos(v1, v2, minuto, precio, aerolinea);
         v1.getAdyacentes().add(newEdge);
         
         return true;
@@ -122,9 +120,9 @@ public class Red {
             String u = actual.getCodigo();
 
             if (u.equals(fin)) break;
-
+            if (actual.dist > dist.get(u)) continue;
             Aeropuerto aeropuertoU = findAeropuerto(u);
-
+            if (aeropuertoU == null) continue;
             for (Vuelos vuelo : aeropuertoU.getAdyacentes()) {
                 String v = vuelo.getTarget().getCodigo();
                 int nuevaDist = dist.get(u) + vuelo.getMinuto();
@@ -150,14 +148,82 @@ public class Red {
         
         return camino;
     }
+
+    //Aeropuerto con más conexiones
+
+
+
     
-
+    //  Los vuelos que salen del aeropuerto
+    public int conexionesDeAeropuerto(String codigo) {
+        Aeropuerto aeropuerto = findAeropuerto(codigo);
+        if (aeropuerto == null) {
+            return -1; // si no existe el aeropuerto, devuelve -1 
+        }
+        return aeropuerto.getAdyacentes().size();
+    }
     
+    //Aeropuerto con menor conexion
+    public Aeropuerto aeropuertoMenosConectado() {
+        Aeropuerto menosConectado = null;
+        int minConexiones = Integer.MAX_VALUE;
+        // Recorrer todos los aeropuertos
+        for (Aeropuerto aeropuerto : vertices) {
+            // Obtener el número de conexiones salientes del aeropuerto
+            int conexiones = aeropuerto.getAdyacentes().size();
+            // Comprobar si el número de conexiones es menor que el mínimo actual
+            if (conexiones < minConexiones) {
+                minConexiones = conexiones;
+                menosConectado = aeropuerto;
+            }
+        }
+        return menosConectado;
+    }
 
+    // Busqueda de rutas alternativas 
+    public List<List<Vuelos>> buscarRutasAlternativas(String origen, String destino){
+        List<List<Vuelos>> rutas = new ArrayList<>();
+        Aeropuerto aeropuertoOrigen = findAeropuerto(origen);
+        Aeropuerto aeropuertoDestino = findAeropuerto(destino);
+        // Comprobar si los aeropuertos existen 
+        if(aeropuertoOrigen == null || aeropuertoDestino == null) {
+            return rutas;
+        }
+        List<Vuelos> rutaActual = new ArrayList<>();
+        List<Aeropuerto> visitados = new ArrayList<>();
+        buscarRutasDFS(aeropuertoOrigen, aeropuertoDestino, rutaActual, rutas, visitados);
+        return rutas;
+    }
     
-
-
-
-
-
+    // Metodo Auxiliar
+    private void buscarRutasDFS(Aeropuerto actual, Aeropuerto destino, List<Vuelos> rutaActual, List<List<Vuelos>> rutas, List<Aeropuerto> visitados){
+        // Si el actual es igual al destino
+        if(actual.equals(destino)){
+            rutas.add(new ArrayList<>(rutaActual));
+            return;
+        }
+        visitados.add(actual);
+        for(Vuelos vuelo : actual.getAdyacentes()){
+            Aeropuerto siguiente = vuelo.getTarget();
+            if(!visitados.contains(siguiente)){
+                rutaActual.add(vuelo);
+                buscarRutasDFS(siguiente, destino, rutaActual, rutas, visitados);
+                rutaActual.remove(rutaActual.size() - 1); 
+            }
+        }
+        visitados.remove(visitados.size() - 1);
+    }
+    
+    //Buscar vuelos por Aerolinea 
+    public List<Vuelos> buscarVuelosPorAerolinea(String aerolinea){
+        List<Vuelos> vuelosEncontrados = new ArrayList<>();
+        for(Aeropuerto aeropuerto : vertices){
+            for(Vuelos vuelo : aeropuerto.getAdyacentes()){
+                if(vuelo.getAerolinea() != null && vuelo.getAerolinea().equalsIgnoreCase(aerolinea)){
+                    vuelosEncontrados.add(vuelo);
+                }
+            }
+        }
+        return vuelosEncontrados;
+    }
 }
