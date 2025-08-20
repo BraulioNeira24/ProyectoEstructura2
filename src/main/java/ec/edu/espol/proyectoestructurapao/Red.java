@@ -105,11 +105,11 @@ public class Red {
 
     
     // Encontrar ruta mas corta 
-    public List<Vuelos> dijkstraVuelos(String codigoOrigen, String codigoDestino) {
+        public List<Vuelos> dijkstraVuelos(String codigoOrigen, String codigoDestino) {
         Map<Aeropuerto, Vuelos> predecesor = new HashMap<>();
         Map<Aeropuerto, Double> distancia = new HashMap<>();
         Set<Aeropuerto> visitados = new HashSet<>();
-        PriorityQueue<Aeropuerto> cola = new PriorityQueue<>((a1, a2) -> Double.compare(distancia.get(a1), distancia.get(a2))); //comparamos por distancia
+        PriorityQueue<Aeropuerto> cola = new PriorityQueue<>((a1, a2) -> Double.compare(distancia.get(a1), distancia.get(a2))); // Comparamos por distancia
 
         Aeropuerto origen = findAeropuerto(codigoOrigen);
         Aeropuerto destino = findAeropuerto(codigoDestino);
@@ -124,32 +124,41 @@ public class Red {
 
         while (!cola.isEmpty()) {
             Aeropuerto actual = cola.poll();
-            if (actual.equals(destino)) break;
-            if (!visitados.add(actual)) continue;
+            // Si el aeropuerto actual es el destino, reconstruimos la ruta.
+            if (actual.equals(destino)) {
+                List<Vuelos> ruta = new ArrayList<>();
+                Aeropuerto current = destino;
+                while (predecesor.containsKey(current)) {
+                    Vuelos v = predecesor.get(current);
+                    ruta.add(0, v);  // Insertamos al inicio para que la ruta sea correcta
+                    current = v.getSource();
+                }
+                if (ruta.isEmpty() || !ruta.get(0).getSource().equals(origen)) {
+                    return new ArrayList<>(); // En el caso de que no haya ruta, devolvemos una lista vacía
+                }
+                return ruta;  // Si la ruta es encontrada entonces la retornamos.
+            }
 
-            for (Vuelos v : actual.getAdyacentes()) {
-                Aeropuerto vecino = v.getTarget();
-                double peso = v.getDistancia();
-                if (!visitados.contains(vecino) && distancia.get(actual) + peso < distancia.get(vecino)) {
-                    distancia.put(vecino, distancia.get(actual) + peso);
-                    predecesor.put(vecino, v);
-                    cola.add(vecino);
+            // Si no es el destino entonces procesamos el aeropuerto actual.
+            if (!visitados.contains(actual)) {
+                visitados.add(actual);
+
+                for (Vuelos v : actual.getAdyacentes()) {
+                    Aeropuerto vecino = v.getTarget();
+                    double peso = v.getDistancia();
+                    if (!visitados.contains(vecino) && distancia.get(actual) + peso < distancia.get(vecino)) {
+                        distancia.put(vecino, distancia.get(actual) + peso);
+                        predecesor.put(vecino, v);
+                        cola.add(vecino);
+                    }
                 }
             }
         }
 
-        List<Vuelos> ruta = new ArrayList<>();
-        Aeropuerto actual = destino;
-        while (predecesor.containsKey(actual)) {
-            Vuelos v = predecesor.get(actual);
-            ruta.add(0, v);
-            actual = v.getSource();
-        }
-        if (ruta.isEmpty() || !ruta.get(0).getSource().equals(origen)) {
-            return new ArrayList<>(); // En el caso de que no hay ruta se devuelve una lista vacia
-        }
-        return ruta;
+        // Si no se encuentra ninguna ruta, devolvemos una lista vacía.
+        return new ArrayList<>();
     }
+
 
     //Aeropuerto con más conexiones
     public Aeropuerto aeropuertoMasConectado() {
