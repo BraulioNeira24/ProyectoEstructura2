@@ -3,11 +3,13 @@ package ec.edu.espol.proyectoestructurapao;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 
 /*
  * 
@@ -103,50 +105,50 @@ public class Red {
 
     
     // Encontrar ruta mas corta 
-    public List<String> dijkstra(String inicio, String fin) {
-        Map<String, Integer> dist = new HashMap<>();
-        Map<String, String> prev = new HashMap<>();
-        PriorityQueue<Nodo<String>> pq = new PriorityQueue<>(Comparator.comparingInt(n -> n.dist));
+    public List<Vuelos> dijkstraVuelos(String codigoOrigen, String codigoDestino) {
+        Map<Aeropuerto, Vuelos> predecesor = new HashMap<>();
+        Map<Aeropuerto, Double> distancia = new HashMap<>();
+        Set<Aeropuerto> visitados = new HashSet<>();
+        PriorityQueue<Aeropuerto> cola = new PriorityQueue<>((a1, a2) -> Double.compare(distancia.get(a1), distancia.get(a2))); //comparamos por distancia
 
-        for (Aeropuerto v : vertices) {
-            dist.put(v.getCodigo(), Integer.MAX_VALUE);
-            prev.put(v.getCodigo(), null);
+        Aeropuerto origen = findAeropuerto(codigoOrigen);
+        Aeropuerto destino = findAeropuerto(codigoDestino);
+        if (origen == null || destino == null) 
+            return new ArrayList<>();
+
+        for (Aeropuerto a : vertices) {
+            distancia.put(a, Double.POSITIVE_INFINITY);
         }
-        dist.put(inicio, 0);
-        pq.add(new Nodo<>(inicio, 0));
+        distancia.put(origen, 0.0);
+        cola.add(origen);
 
-        while (!pq.isEmpty()) {
-            Nodo<String> actual = pq.poll();
-            String u = actual.getCodigo();
+        while (!cola.isEmpty()) {
+            Aeropuerto actual = cola.poll();
+            if (actual.equals(destino)) break;
+            if (!visitados.add(actual)) continue;
 
-            if (u.equals(fin)) break;
-            if (actual.dist > dist.get(u)) continue;
-            Aeropuerto aeropuertoU = findAeropuerto(u);
-            if (aeropuertoU == null) continue;
-            for (Vuelos vuelo : aeropuertoU.getAdyacentes()) {
-                String v = vuelo.getTarget().getCodigo();
-                int nuevaDist = dist.get(u) + vuelo.getMinuto();
-
-                if (nuevaDist < dist.get(v)) {
-                    dist.put(v, nuevaDist);
-                    prev.put(v, u);
-                    pq.add(new Nodo<>(v, nuevaDist));
+            for (Vuelos v : actual.getAdyacentes()) {
+                Aeropuerto vecino = v.getTarget();
+                double peso = v.getDistancia();
+                if (!visitados.contains(vecino) && distancia.get(actual) + peso < distancia.get(vecino)) {
+                    distancia.put(vecino, distancia.get(actual) + peso);
+                    predecesor.put(vecino, v);
+                    cola.add(vecino);
                 }
             }
         }
 
-        List<String> camino = new ArrayList<>();
-        String actual = fin;
-        while (actual != null) {
-            camino.add(0, actual);
-            actual = prev.get(actual);
+        List<Vuelos> ruta = new ArrayList<>();
+        Aeropuerto actual = destino;
+        while (predecesor.containsKey(actual)) {
+            Vuelos v = predecesor.get(actual);
+            ruta.add(0, v);
+            actual = v.getSource();
         }
-
-        if (dist.get(fin) == Integer.MAX_VALUE) {
-            return new ArrayList<>();
+        if (ruta.isEmpty() || !ruta.get(0).getSource().equals(origen)) {
+            return new ArrayList<>(); // En el caso de que no hay ruta se devuelve una lista vacia
         }
-        
-        return camino;
+        return ruta;
     }
 
     //Aeropuerto con más conexiones
