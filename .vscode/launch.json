@@ -1,0 +1,19 @@
+{
+    // Use IntelliSense para saber los atributos posibles.
+    // Mantenga el puntero para ver las descripciones de los existentes atributos.
+    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+    
+    //Documentacion: Debes actualizar "vmArgs" con la ruta correcta a tu SDK de JavaFX que tienes descargado.
+    //Ejemplo: "vmArgs": "--module-path \"C:/ruta/a/tu
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch JavaFX App",
+            "request": "launch",
+            "mainClass": "ec.edu.espol.proyectoestructurapao.ProyectoEstructuraPAO",
+            "vmArgs": "--module-path \"C:/programs/JavaFX/openjfx-21.0.8_windows-x64_bin-sdk/javafx-sdk-21.0.8/lib\" --add-modules javafx.controls,javafx.fxml",
+            "projectName": "ProyectoEstructura2_5326e2a6"
+        }
+    ]
+}
