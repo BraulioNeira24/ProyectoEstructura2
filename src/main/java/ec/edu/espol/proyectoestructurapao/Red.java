@@ -24,6 +24,14 @@ public class Red {
         this.cmp = cmp;
     }
 
+    
+
+    public LinkedList<Aeropuerto> getVertices() {
+        return vertices;
+    }
+
+
+
     // Agregar un aeropuerto
     public boolean addAeropuerto(Aeropuerto nuevo){
         if (nuevo == null || findAeropuerto(nuevo.getCodigo()) != null){
@@ -326,7 +334,7 @@ public class Red {
             }
         }
     }
-    alcanzables.remove(origen); // Si no quieres incluir el origen
+    alcanzables.remove(origen); 
     return alcanzables;
 }
 

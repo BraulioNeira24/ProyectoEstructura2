@@ -1,11 +1,37 @@
 package ec.edu.espol.proyectoestructurapao;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import java.util.Comparator;
 /**
  *
  * @author equipo Estructura de Datos
  */
-public class ProyectoEstructuraPAO {
-    public static void main(String[] args) {
+public class ProyectoEstructuraPAO extends Application {
+    private Red redVuelos;
+    @Override
+    public void start(Stage primaryStage) {
+        // Inicializa la red y algunos aeropuertos/vuelos de ejemplo
+        inicializarRed();
+
+        Pane root = new Pane();
+        Canvas canvas = new Canvas(1200, 600);
+        root.getChildren().add(canvas);
+
+        dibujarAeropuertos(canvas.getGraphicsContext2D());
+
+        Scene scene = new Scene(root, 1200, 600);
+        primaryStage.setTitle("Red de Aeropuertos - JavaFX");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void inicializarRed() {
+       
         Aeropuerto aerDaxing = new Aeropuerto("PKX", "Daxing","Pekín","China",39.511944, 116.410556);
         Aeropuerto aerCapital = new Aeropuerto("PEK", "Capital","Pekín","China",40.0801, 116.585);
         Aeropuerto aerPudong = new Aeropuerto("PVG", "Pudong","Shangai","China",31.143333, 121.805278);
@@ -19,33 +45,52 @@ public class ProyectoEstructuraPAO {
         
         
         Comparator<String> comparador = (String s1, String s2) -> s1.compareTo(s2);
-        Red RedVuelos = new Red(comparador);
-        RedVuelos.addAeropuerto(aerDaxing);
-        RedVuelos.addAeropuerto(aerCapital);
-        RedVuelos.addAeropuerto(aerPudong);
-        RedVuelos.addAeropuerto(aerQuito); 
-        RedVuelos.addAeropuerto(aerTokyo); 
-        RedVuelos.addAeropuerto(aerInglaterra);
-        RedVuelos.addAeropuerto(aerGuayaquil);
-        RedVuelos.addAeropuerto(aerChangi);
-        RedVuelos.addAeropuerto(aerDXB);
-        RedVuelos.addAeropuerto(aerJFK);
+        redVuelos = new Red(comparador);
+        redVuelos.addAeropuerto(aerDaxing);
+        redVuelos.addAeropuerto(aerCapital);
+        redVuelos.addAeropuerto(aerPudong);
+        redVuelos.addAeropuerto(aerQuito); 
+        redVuelos.addAeropuerto(aerTokyo); 
+        redVuelos.addAeropuerto(aerInglaterra);
+        redVuelos.addAeropuerto(aerGuayaquil);
+        redVuelos.addAeropuerto(aerChangi);
+        redVuelos.addAeropuerto(aerDXB);
+        redVuelos.addAeropuerto(aerJFK);
 
-        RedVuelos.addVuelo("PKX", "PEK", 120, 200.15,"China Airlines");
-        RedVuelos.addVuelo("PKX", "PVG", 110, 153.12,"China Eastern Airlines");
-        RedVuelos.addVuelo("GYE", "UIO", 40, 60.54,"Avianca");
-        RedVuelos.addVuelo("UIO", "LHR", 634, 412.23,"Avianca");
-        RedVuelos.addVuelo("UIO", "NRT", 1440, 615.23,"Avianca");
-        RedVuelos.addVuelo("LHR", "PKX" , 542, 438,"Avianca");
+        redVuelos.addVuelo("PKX", "PEK", 120, 200.15,"China Airlines");
+        redVuelos.addVuelo("PKX", "PVG", 110, 153.12,"China Eastern Airlines");
+        redVuelos.addVuelo("GYE", "UIO", 40, 60.54,"Avianca");
+        redVuelos.addVuelo("UIO", "LHR", 634, 412.23,"Avianca");
+        redVuelos.addVuelo("UIO", "NRT", 1440, 615.23,"Avianca");
+        redVuelos.addVuelo("LHR", "PKX" , 542, 438,"Avianca");
 
-        for (Vuelos v: aerQuito.getAdyacentes()){
-            System.out.println(v.getDistancia());
+    }
+
+    private void dibujarAeropuertos(GraphicsContext gc) {
+        gc.setFill(Color.LIGHTBLUE);
+        gc.fillRect(0, 0, 1200, 600);
+
+        for (Aeropuerto aeropuerto : redVuelos.getVertices()) {
+            double x = convertirLongitudAX(aeropuerto.getLongitud());
+            double y = convertirLatitudAY(aeropuerto.getLatitud());
+            gc.setFill(Color.RED);
+            gc.fillOval(x - 5, y - 5, 10, 10);
+            gc.setFill(Color.BLACK);
+            gc.fillText(aeropuerto.getCodigo(), x + 8, y);
         }
+    }
 
-        for(String s: RedVuelos.dijkstra("GYE","PKX")){
-            System.out.println(s);
-        }
+    private double convertirLongitudAX(double longitud) {
+        // Mapea de -180 a 180 a 0 a 1200
+        return ((longitud + 180) / 360.0) * 1200;
+    }
 
+    private double convertirLatitudAY(double latitud) {
+        // Mapea de 90 a -90 a 0 a 600 (latitud positiva arriba)
+        return ((90 - latitud) / 180.0) * 600;
+    }
 
+    public static void main(String[] args) {
+        launch(args);
     }
 }
