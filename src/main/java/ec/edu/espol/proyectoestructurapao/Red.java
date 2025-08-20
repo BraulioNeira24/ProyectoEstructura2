@@ -250,4 +250,84 @@ public class Red {
         }
         return vuelosEncontrados;
     }
+
+    // Metodo que devuelve todas las rutas posibles como lista de códigos de aeropuerto
+    public List<List<String>> buscarTodasLasRutas(String origen, String destino) {
+        List<List<String>> rutas = new ArrayList<>();
+        Aeropuerto aeropuertoOrigen = findAeropuerto(origen);
+        Aeropuerto aeropuertoDestino = findAeropuerto(destino);
+        if (aeropuertoOrigen == null || aeropuertoDestino == null) return rutas;
+        List<String> rutaActual = new ArrayList<>();
+        Set<Aeropuerto> visitados = new HashSet<>();
+        dfsRutas(aeropuertoOrigen, aeropuertoDestino, rutaActual, rutas, visitados);
+        return rutas;
+    }
+
+    // Método auxiliar para realizar DFS y encontrar todas las rutas
+    private void dfsRutas(Aeropuerto actual, Aeropuerto destino, List<String> rutaActual, List<List<String>> rutas, Set<Aeropuerto> visitados) {
+        rutaActual.add(actual.getCodigo());
+        if (actual.equals(destino)) {
+            rutas.add(new ArrayList<>(rutaActual));
+        } else {
+            visitados.add(actual);
+            for (Vuelos vuelo : actual.getAdyacentes()) {
+                Aeropuerto siguiente = vuelo.getTarget();
+                if (!visitados.contains(siguiente)) {
+                    dfsRutas(siguiente, destino, rutaActual, rutas, visitados);
+                }
+            }
+            visitados.remove(actual);
+        }
+        rutaActual.remove(rutaActual.size() - 1);
+    }
+
+    // Método para calcular el costo total de una ruta
+    // tipo puede ser "precio", "minuto" o "distancia"
+    public double calcularCostoTotal(List<Vuelos> ruta, String tipo) {
+        double total = 0;
+        for (Vuelos v : ruta) {
+            if ("precio".equalsIgnoreCase(tipo)) {
+                total += v.getPrecio();
+            } else if ("minuto".equalsIgnoreCase(tipo)) {
+                total += v.getMinuto();
+            } else if ("distancia".equalsIgnoreCase(tipo)) {
+                total += v.getDistancia();
+            }
+        }
+        return total;
+    }
+    // Método para encontrar vuelos directos entre dos aeropuertos
+    public List<Vuelos> vuelosDirectos(String codigoOrigen, String codigoDestino) {
+        Aeropuerto origen = findAeropuerto(codigoOrigen);
+        Aeropuerto destino = findAeropuerto(codigoDestino);
+        List<Vuelos> directos = new ArrayList<>();
+        if (origen == null || destino == null) return directos;
+        for (Vuelos v : origen.getAdyacentes()) {
+            if (v.getTarget().equals(destino)) {
+                directos.add(v);
+            }
+        }
+        return directos;
+    }
+    // Método para encontrar todos los aeropuertos alcanzables desde un aeropuerto dado
+    public Set<Aeropuerto> aeropuertosAlcanzables(String codigoOrigen) {
+    Set<Aeropuerto> alcanzables = new HashSet<>();
+    Aeropuerto origen = findAeropuerto(codigoOrigen);
+    if (origen == null) return alcanzables;
+    Queue<Aeropuerto> cola = new LinkedList<>();
+    cola.add(origen);
+    alcanzables.add(origen);
+    while (!cola.isEmpty()) {
+        Aeropuerto actual = cola.poll();
+        for (Vuelos v : actual.getAdyacentes()) {
+            Aeropuerto siguiente = v.getTarget();
+            if (alcanzables.add(siguiente)) {
+                cola.add(siguiente);
+            }
+        }
+    }
+    alcanzables.remove(origen); // Si no quieres incluir el origen
+    return alcanzables;
+}
+
 }
