@@ -7,24 +7,30 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.Comparator;
+import javafx.scene.image.Image;
+import javafx.scene.canvas.GraphicsContext;
 /**
  *
  * @author equipo Estructura de Datos
  */
 public class ProyectoEstructuraPAO extends Application {
     private Red redVuelos;
+    private Image imagenMapa;
     @Override
     public void start(Stage primaryStage) {
         // Inicializa la red y algunos aeropuertos/vuelos de ejemplo
         inicializarRed();
 
         Pane root = new Pane();
-        Canvas canvas = new Canvas(1200, 600);
+        Canvas canvas = new Canvas(1000, 800);
         root.getChildren().add(canvas);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        dibujarFondo(gc);
+        
 
         dibujarAeropuertos(canvas.getGraphicsContext2D());
 
-        Scene scene = new Scene(root, 1200, 600);
+        Scene scene = new Scene(root, 1000, 800);
         primaryStage.setTitle("Red de Aeropuertos - JavaFX");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -68,7 +74,7 @@ public class ProyectoEstructuraPAO extends Application {
 
     private void dibujarAeropuertos(GraphicsContext gc) {
         gc.setFill(Color.LIGHTBLUE);
-        gc.fillRect(0, 0, 1200, 600);
+        gc.fillRect(0, 0, 1000, 800);
 
         for (Aeropuerto aeropuerto : redVuelos.getVertices()) {
             double x = convertirLongitudAX(aeropuerto.getLongitud());
@@ -82,12 +88,20 @@ public class ProyectoEstructuraPAO extends Application {
 
     private double convertirLongitudAX(double longitud) {
         // Mapea de -180 a 180 a 0 a 1200
-        return ((longitud + 180) / 360.0) * 1200;
+        return ((longitud + 180) / 360.0) * 1000;
     }
 
     private double convertirLatitudAY(double latitud) {
         // Mapea de 90 a -90 a 0 a 600 (latitud positiva arriba)
-        return ((90 - latitud) / 180.0) * 600;
+        return ((90 - latitud) / 180.0) * 800;
+    }
+
+   private void dibujarFondo(GraphicsContext gc) {
+        // Cargar la imagen del mapa
+        Image mapa = new Image(getClass().getResourceAsStream("/Mapa.png"));  
+
+        // Dibujar la imagen en el canvas
+        gc.drawImage(mapa, 0, 0, 1000, 800);  // Ajusta el tamaño de la imagen según el tamaño del Canvas
     }
 
     public static void main(String[] args) {

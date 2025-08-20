@@ -1,7 +1,6 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.project.sourcePaths": [
-        "src/main/java",
-        "lib"
+        "src/main/java"
     ]
 }
